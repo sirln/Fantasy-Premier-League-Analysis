@@ -6,7 +6,6 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy as np
-##import plotly.graph_objs as go
 import plotly.express as px
 from dash.dependencies import Output, Input, State
 
@@ -26,14 +25,7 @@ clubs_df = pd.DataFrame(response['teams'])
 season_df = pd.DataFrame(response['phases'])
 gameweek_df = pd.DataFrame(response['events'])
 position_df = pd.DataFrame(response['element_types'])
-
-
-##trim_players_df = players_df[['id','second_name','team','element_type',\
-##                              'selected_by_percent','now_cost','minutes',\
-##                              'transfers_in','value_season','total_points']]
-
-copy_players_df = players_df.copy()
-##copy_players_df[club] = 
+ 
 
 players_df['team']=players_df.team.map(clubs_df.set_index('id').name)
 
@@ -62,36 +54,9 @@ fig2 = px.sunburst(trim_clubs_df,path=['strength','short_name'],values='strength
 fig3 = px.scatter(players_df.sort_values('team', ascending=True), x='ict_index_rank', y='total_points',\
                   size="total_points", color="team",  log_x=True, hover_data=['web_name','value_season','now_cost'])
 
-fig1.update_layout(height=370)
-fig2.update_layout(height=370)
-##fig3.update_layout(width=1320)
-##fig3.update_layout(height=560)
+##fig1.update_layout(height=450, width=560)
+##fig2.update_layout(height=450, width=560)
 
-'''Function below is replaced by "generate_table()" fuction below it'''
-##def generate_table(dataframe, max_rows=20):
-##    return html.Table(
-##        # Header
-##        [html.Tr([html.Th(col) for col in dataframe.columns])] +
-##        # Body
-##        [html.Tr([
-##            html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-##            ])for i in range(min(len(dataframe),max_rows))
-##        ]
-##    )
-
-'''Function below is replaced by "dash_bootstrap_components.Table.from_dataframe()" fuction'''
-
-##def generate_table(dataframe, max_rows=20):
-##    return dbc.Table([
-##        html.Thead(
-##            html.Tr([html.Th(col) for col in dataframe.columns])
-##        ),
-##        html.Tbody([
-##            html.Tr([
-##                html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-##            ]) for i in range(min(len(dataframe), max_rows))
-##        ])
-##    ],bordered=True,dark=True,hover=True,responsive=True,striped=True,)
 
 table1=dbc.Table.from_dataframe(trim_clubs_df_1,striped=True,bordered=True,\
                                hover=True,dark=True,responsive=True)
@@ -104,7 +69,6 @@ external_stylesheets = [
         "family=Lato:wght@400;700&display=swap",
         "rel": "stylesheet",
     },
-##    'https://codepen.io/chriddyp/pen/bWLwgP.css',
 ]
 
 
@@ -113,108 +77,13 @@ app = dash.Dash(__name__, external_stylesheets=[external_stylesheets,dbc.themes.
 server = app.server
 app.title = 'Fantasy Premier League Stats!'
 
-##headercolors = {
-##    'background' : '#222222',
-##    'text': '#F7F7F7'
-##    }
-##
-##bodycolors = {
-##    'background' : '#F7F7F7',
-##    'text': '#222222'
-##}
-##
-##
-####app.layout = html.Div(##style={'backgroundColor':headercolors['background']},
-##    children=[
-##        html.Div(style={'backgroundColor':headercolors['background']},
-##            children=[
-##                html.H1(
-##                    children='Hello FPL Manager!',
-##                    style={
-##                        'textAlign': 'center',
-##                        'color': headercolors['text']
-##                    }
-##                ),
-##                html.Div(
-##                    children='Dash Framework : A web application framework for Python.',
-##                    style={
-##                        'textAlign': 'center',
-##                        'color': headercolors['text']
-##                    }
-##                ),
-##            ]
-##        ),
-##        
-##    dcc.Graph(
-##        id='Fantasy Teams Bar Graph',
-##        figure={
-##            'data':[
-##                go.Bar(
-##                    x=trim_clubs_df['short_name'],
-##                    y=trim_clubs_df['strength'],
-##                )
-##            ],
-##            'layout': go.Layout(
-##                xaxis={'title': 'FPL Teams'},
-##                yaxis={'title': 'Team Strength'}
-##            )
-##        }
-##    ),
-##
-##    html.Div(
-##        children=[
-##            html.H2(
-##                children=['FPL Clubs (2021/2022) Season'],
-##                style={
-##                    'textAlign': 'center'
-##                }
-##            ),
-##            generate_table(trim_clubs_df)
-##        ]
-##    ),
-##
-##    dcc.Graph(
-##        id='Fantasy Teams Pie Chart',
-##        figure=fig
-##    )
-##])
-
-
 app.layout = html.Div(
     children=[
-##        dbc.NavbarSimple(
-##            children=[
-##                dbc.NavItem(dbc.NavLink('Home', href='#')),
-##                dbc.NavItem(dbc.NavLink('About', href='#')),
-##                dbc.NavItem(dbc.NavLink('Contact', href='#')),
-##                dbc.NavItem(dbc.NavLink('Graphs', href='#')),
-##            ],
-##            brand='',
-##            brand_href='./assets/favicon.ico',
-##            color='dark',
-##            dark=True,
-##            fluid=True,
-##            
-##        ),
-
-##        html.Div(
-##            children=[
-##                html.H2(
-##                    children=['Table : FPL Clubs (2021/2022 Season)'],
-##                    style={
-##                        'textAlign': 'center'
-##                    }
-##                ),
-####                generate_table(trim_clubs_df)
-##                table
-##            ]
-##        ),
         dbc.Container(
             [
                 html.Div(
                     [
                         html.P(children='⚽', className="header-emoji"),
-##                        html.Img(src=app.get_asset_url('icon.ico'), className="header-emoji"),
                         html.H1(
                             children="Fantasy Premier League Dashboard", className="header-title"
                         ),
@@ -241,6 +110,7 @@ app.layout = html.Div(
                                     fluid=True,
                                 ),
                             ],
+                            width=7,
                         ),
                         
                         dbc.Col(
@@ -265,7 +135,7 @@ app.layout = html.Div(
                                                     className='pie_chart'
                                                 ),
                                                 fluid=True,
-                                            )
+                                            ),
                                         ),
                                         dbc.Row(
                                             dbc.Container(
@@ -285,12 +155,13 @@ app.layout = html.Div(
                                                     className='pie_chart'
                                                 ),
                                                 fluid=True,
-                                            )
+                                            ),
                                         ),
                                     ],
                                     fluid=True,
                                 ),
                             ],
+                            width=5,
                         ),
                     ]
                 ),
